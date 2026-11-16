@@ -32,7 +32,8 @@ body {
 
 body {
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body::before,
@@ -81,17 +82,17 @@ tr {
 .shell {
   position: relative;
   z-index: 1;
-  height: 100vh;
+  min-height: 100vh;
   padding: 22px 26px 24px;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
   gap: 18px;
 }
 
 .masthead {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(430px, 0.9fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(460px, 1fr);
+  gap: 18px;
   align-items: end;
 }
 
@@ -133,7 +134,7 @@ h1 {
 .stats {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .stat-card,
@@ -147,7 +148,7 @@ h1 {
 .stat-card {
   min-width: 0;
   min-height: 84px;
-  padding: 14px 16px;
+  padding: 14px;
   border-radius: var(--radius-sm);
 }
 
@@ -165,11 +166,12 @@ h1 {
   line-height: 1.1;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .stat-card--value dd,
 .stat-card--date dd {
-  font-size: clamp(14px, 1.2vw, 20px);
+  font-size: clamp(13px, 1.08vw, 18px);
 }
 
 .workspace,
@@ -179,9 +181,8 @@ h1 {
 
 .board-view {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
   gap: 16px;
-  height: 100%;
 }
 
 .panel {
@@ -281,14 +282,12 @@ input[type="search"]::placeholder {
 
 .table-panel {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  min-height: 0;
+  gap: 14px;
   padding-bottom: 12px;
 }
 
 .table-scroll {
-  min-height: 0;
-  overflow: auto;
+  overflow: visible;
   border-radius: 12px;
   border: 1px solid rgba(122, 240, 200, 0.08);
 }
@@ -563,14 +562,6 @@ input[type="search"]::placeholder {
 }
 
 @media (max-width: 1180px) {
-  body {
-    overflow: auto;
-  }
-
-  .shell {
-    height: auto;
-  }
-
   .masthead,
   .detail-grid,
   .method-grid,
@@ -578,13 +569,5 @@ input[type="search"]::placeholder {
   .metrics-grid,
   .stats {
     grid-template-columns: 1fr;
-  }
-
-  .board-view {
-    height: auto;
-  }
-
-  .table-scroll {
-    max-height: 60vh;
   }
 }

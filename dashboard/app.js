@@ -93,6 +93,13 @@
     return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }).format(date);
   }
 
+  function formatStatDate(value) {
+    if (!value) return '—';
+    const date = new Date(`${value}T00:00:00Z`);
+    if (Number.isNaN(date.getTime())) return value;
+    return new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }).format(date);
+  }
+
   function escapeHtml(value) {
     return String(value)
       .replace(/&/g, '&amp;')
@@ -181,15 +188,15 @@
 
   function renderStats() {
     const items = [
-      ['Protocols scanned', stats.totalProtocols],
-      ['Pre-token found', stats.preTokenCount],
-      ['Rows on board', stats.boardCount],
-      ['Combined implied', formatMoneyCompact(stats.totalImpliedUsd)],
-      ['Snapshot date', formatDate(stats.asOf)]
+      ['Protocols scanned', stats.totalProtocols, 'stat-card--count'],
+      ['Pre-token found', stats.preTokenCount, 'stat-card--count'],
+      ['Rows on board', stats.boardCount, 'stat-card--count'],
+      ['Combined implied', formatMoneyCompact(stats.totalImpliedUsd), 'stat-card--value'],
+      ['Snapshot date', formatStatDate(stats.asOf), 'stat-card--date']
     ];
 
-    elements.statsStrip.innerHTML = items.map(([label, value]) => (
-      `<div class="stat-card"><dt>${escapeHtml(label)}</dt><dd class="mono">${escapeHtml(String(value))}</dd></div>`
+    elements.statsStrip.innerHTML = items.map(([label, value, className]) => (
+      `<div class="stat-card ${className}"><dt>${escapeHtml(label)}</dt><dd class="mono">${escapeHtml(String(value))}</dd></div>`
     )).join('');
   }
 
@@ -263,8 +270,7 @@
   function renderDetail() {
     const row = detailRow();
     if (!row) {
-      state.detailSlug = null;
-      applyHash();
+      elements.detailView.innerHTML = '';
       return;
     }
 
@@ -370,7 +376,8 @@
     const hash = window.location.hash || '#/';
     const match = hash.match(/^#\/p\/([^/]+)$/);
     if (match) {
-      state.detailSlug = decodeURIComponent(match[1]);
+      const slug = decodeURIComponent(match[1]);
+      state.detailSlug = rows.some((row) => row.slug === slug) ? slug : null;
     } else {
       state.detailSlug = null;
     }
